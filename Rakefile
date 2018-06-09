@@ -1,5 +1,5 @@
-task :default => [:test]
+task :default => [:get_flats]
 
-task :test do
+task :get_flats do
   ruby "finder.rb"
 end
