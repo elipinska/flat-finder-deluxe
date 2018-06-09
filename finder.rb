@@ -1,6 +1,8 @@
 require "httparty"
 require "nokogiri"
 
+require "./mailer"
+
 p "Getting Zoopla..."
 doc = HTTParty.get("https://www.zoopla.co.uk/to-rent/property/edinburgh/?beds_min=2&include_shared_accommodation=false&price_frequency=per_month&price_max=1000&q=Edinburgh&results_sort=newest_listings&search_source=home")
 
@@ -11,3 +13,5 @@ ids = ugly_data.map { |id| id.value }
 
 p "Found #{results.length} results"
 p results
+
+Mailer.new.send(results)
