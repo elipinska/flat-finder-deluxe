@@ -21,7 +21,7 @@ class Mailer
     Mail.deliver do
            to ENV["FLAT_FINDER_RECEIVER"]
          from ENV["FLAT_FINDER_SENDER"]
-      subject "Your latest 🏡"
+      subject "Your latest #{results.length} 🏡"
          body text
     end
   end
