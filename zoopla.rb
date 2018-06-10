@@ -6,9 +6,6 @@ def get_zoopla(notify: true)
   ugly_data = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id')
   fetched_ids = ugly_data.map { |id| id.value }
 
-  p "Found #{results.length} results"
-  p results
-
   saved_ids = load_saved_ids
 
   p "Loading saved ids"
@@ -34,10 +31,11 @@ def get_zoopla(notify: true)
     Mailer.new.send(results)
   end
 
-  p "Saving"
-  p new_ids
+  p "Saving new results #{new_ids.length}"
 
-  save_ids(new_ids)
+  if new_ids
+    save_ids(new_ids)
+  end  
 end
 
 def load_saved_ids
