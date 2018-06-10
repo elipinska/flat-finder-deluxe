@@ -10,7 +10,7 @@ def get_zoopla(notify: true)
     suffix = el.text.strip.sub("Listed on \n ", "")
     newline_idx = suffix.index("\n")
 
-    Date.parse(suffix[0..return_idx-1])
+    Date.parse(suffix[0..newline_idx-1])
   }
 
   results_hash = {}
