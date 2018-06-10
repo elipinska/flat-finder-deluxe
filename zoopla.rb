@@ -11,6 +11,39 @@ def get_zoopla(notify: true)
   p "Loading saved ids"
   p saved_ids
 
+  new_ids = newly_added_ids(fetched_ids, saved_ids)
+
+  if notify && new_ids
+    results = new_ids.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id}" }
+    Mailer.new.send(results)
+  end
+
+  if new_ids
+    p "Saving new results #{new_ids.length}"
+    save_ids(new_ids)
+  end
+end
+
+def load_saved_ids
+  ids = []
+  if File.exist?("saves/zoopla.txt")
+    File.readlines("saves/zoopla.txt").each do |line|
+      ids << line.strip
+    end
+  end
+
+  ids
+end
+
+def save_ids(ids)
+  open("saves/zoopla.txt", "a") { |f|
+    ids.each do |id|
+      f.puts id
+    end
+  }
+end
+
+def newly_added_ids(fetched_ids, saved_ids)
   new_ids = []
   fetched_ids.each do |fetched_id|
     found = false
@@ -26,31 +59,5 @@ def get_zoopla(notify: true)
     end
   end
 
-  if notify && new_ids
-    results = new_ids.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id}" }
-    Mailer.new.send(results)
-  end
-
-  p "Saving new results #{new_ids.length}"
-
-  if new_ids
-    save_ids(new_ids)
-  end  
-end
-
-def load_saved_ids
-  ids = []
-  File.readlines("saves/zoopla.txt").each do |line|
-    ids << line.strip
-  end
-
-  ids
-end
-
-def save_ids(ids)
-  open("saves/zoopla.txt", "a") { |f|
-    ids.each do |id|
-      f.puts id
-    end
-  }
+  new_ids
 end
