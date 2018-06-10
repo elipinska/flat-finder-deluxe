@@ -4,7 +4,6 @@ def get_zoopla(notify: true)
 
   @parsed = Nokogiri::HTML(doc)
   ugly_data = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id')
-  results = ugly_data.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id.value}" }
   fetched_ids = ugly_data.map { |id| id.value }
 
   p "Found #{results.length} results"
@@ -31,6 +30,7 @@ def get_zoopla(notify: true)
   end
 
   if notify && new_ids
+    results = new_ids.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id}" }
     Mailer.new.send(results)
   end
 
