@@ -1,10 +1,19 @@
-def get_zoopla(notify: true)
+def get_zoopla(notify: false)
   p "Getting Zoopla..."
   doc = HTTParty.get("https://www.zoopla.co.uk/to-rent/property/edinburgh/?beds_min=2&include_shared_accommodation=false&price_frequency=per_month&price_max=1000&q=Edinburgh&results_sort=newest_listings&search_source=home")
 
   @parsed = Nokogiri::HTML(doc)
-  ugly_data = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id')
-  fetched_ids = ugly_data.map { |id| id.value }
+  ids = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id')
+  dates = @parsed.xpath('//small[contains(text(),"Listed on")]').children.map {|el|
+    suffix = el.text.strip.sub("Listed on \n ", "")
+    return_idx = suffix.index("\n")
+
+    suffix[0..return_idx-1]
+  }
+
+  p dates
+
+  fetched_ids = ids.map { |id| id.value }
 
   saved_ids = load_saved_ids
 
