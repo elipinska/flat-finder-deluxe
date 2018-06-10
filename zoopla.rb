@@ -19,7 +19,7 @@ def get_zoopla(notify: true)
   end
 
   if new_ids
-    p "Saving new results #{new_ids.length}"
+    p "Saving #{new_ids.length} new results"
     save_ids(new_ids)
   end
 end
@@ -36,6 +36,8 @@ def load_saved_ids
 end
 
 def save_ids(ids)
+  Dir.mkdir("saves") unless File.exists?("saves")
+
   open("saves/zoopla.txt", "a") { |f|
     ids.each do |id|
       f.puts id
