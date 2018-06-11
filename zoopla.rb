@@ -6,8 +6,9 @@ def get_zoopla(notify: true)
   ids = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id').map {|id|
     id.value
   }
+  
   dates = @parsed.xpath('//small[contains(text(),"Listed on")]').children.map {|el|
-    suffix = el.text.strip.sub("Listed on \n ", "")
+    suffix = el.text.sub("Listed on", "").strip
     newline_idx = suffix.index("\n")
 
     Date.parse(suffix[0..newline_idx-1])
