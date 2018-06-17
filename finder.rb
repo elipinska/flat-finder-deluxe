@@ -3,5 +3,9 @@ require "nokogiri"
 
 require "./mailer"
 require "./zoopla"
+require "./rightmove"
 
-get_zoopla
+zoopla_results = get_zoopla
+rightmove_results = get_rightmove
+
+Mailer.new.send((zoopla_results << rightmove_results).flatten!)

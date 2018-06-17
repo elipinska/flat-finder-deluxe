@@ -1,4 +1,4 @@
-def get_zoopla(notify: true)
+def get_zoopla
   p "Getting Zoopla..."
   doc = HTTParty.get("https://www.zoopla.co.uk/to-rent/property/edinburgh/?beds_min=2&include_shared_accommodation=false&price_frequency=per_month&price_max=1000&q=Edinburgh&results_sort=newest_listings&search_source=home")
 
@@ -6,7 +6,7 @@ def get_zoopla(notify: true)
   ids = @parsed.xpath('//ul[contains(@class, "listing-results")]/li/@data-listing-id').map {|id|
     id.value
   }
-  
+
   dates = @parsed.xpath('//small[contains(text(),"Listed on")]').children.map {|el|
     suffix = el.text.sub("Listed on", "").strip
     newline_idx = suffix.index("\n")
@@ -22,12 +22,12 @@ def get_zoopla(notify: true)
       results_hash[date] = [ids[index]]
     end
   }
-  todays_results = results_hash[Date.today]
+  todays_results = results_hash[Date.today - 3]
 
   p "No results found for today" unless todays_results
 
-  if todays_results && notify
-    results = todays_results.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id}" }
-    Mailer.new.send(results)
+  if todays_results
+    todays_results.map { |id| "https://www.zoopla.co.uk/to-rent/details/#{id}" }
+  else []
   end
 end
