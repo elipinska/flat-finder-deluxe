@@ -18,13 +18,15 @@ class Mailer
     p "Sending email with results..."
     text = results.map { |result| "#{result}\n\n" }
 
+# E-mail search results to yourself
     Mail.deliver do
-           to ENV["FLAT_FINDER_RECEIVER"]
+           to ENV["FLAT_FINDER_SENDER"]
          from ENV["FLAT_FINDER_SENDER"]
       subject "Your latest #{results.length} 🏡"
          body text
     end
 
+# E-mail search results to another person
     Mail.deliver do
            to ENV["FLAT_FINDER_RECEIVER"]
          from ENV["FLAT_FINDER_SENDER"]
